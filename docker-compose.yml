@@ -1,0 +1,48 @@
+version: "2"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./versions/latest/Dockerfile
+#    image: bandsintown/docker-php
+    container_name: php
+    environment:
+      - SERVICE_NAME=php-fpm
+      - CONSUL_HTTP_ADDR=consul:8500
+    ports:
+      - 9000:9000
+
+ # Consul
+  consul:
+    image: consul:0.7.5
+    command: "agent -dev -client 0.0.0.0 -ui"
+    container_name: consul-php
+    ports:
+      - 8301
+      - 8500:8500
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+      - SERVICE_IGNORE=true
+
+  # Registrator
+  registrator:
+    image: nhuray/registrator:v7
+    command: "-internal consul://consul:8500"
+    container_name: registrator-php
+    depends_on:
+      - consul
+    volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+
+# Consulator
+  consulator:
+    image: lewispeckover/consulator
+    command: "sync -prefix=service /app/consulator.yml"
+    container_name: consulator
+    depends_on:
+      - consul
+    volumes:
+      - ./consulator.yml:/app/consulator.yml
+    environment:
+      - CONSUL_HTTP_ADDR=consul:8500
