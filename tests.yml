@@ -5,14 +5,14 @@ services:
 
   # Test image (packages, services, scripts)
   test-image:
-    image: bandsintown/docker-php-test:${VERSION}
+    image: bandsintown/php-test:${VERSION}
     command: bats /tests/image
     environment:
       - VERSION=${VERSION}
 
   # Tests for consul template
   test-consul-template:
-    image: bandsintown/docker-php-test:${VERSION}
+    image: bandsintown/php-test:${VERSION}
     command: dockerize -wait http://consul:8500 -timeout 10s bats /tests/consul-template
     depends_on:
       - consul

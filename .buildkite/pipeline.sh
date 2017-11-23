@@ -16,10 +16,10 @@ if [ "$BUILDKITE_SOURCE" == "trigger_job" -a "$BUILDKITE_BRANCH" == 'master' ]; 
 cat <<EOF
 steps:
   - label: ':hammer: Run tests'
-    command: bin/docker-php  tests --build
+    command: bin/php  tests --build
   - wait
   - label: ':docker: Release on Dockerhub'
-    command: bin/docker-php release
+    command: bin/php release
 EOF
 exit 0
 fi
@@ -29,7 +29,7 @@ if [ "$RELEASE_NAME" == "n/a"  -a "$BUILDKITE_BRANCH" == 'master' ]; then
 cat <<EOF
 steps:
   - label: ':hammer: Run tests'
-    command: bin/docker-php tests --build
+    command: bin/php tests --build
   - wait
   - block: ':github: Release'
     prompt: "Fill out the details for release"
@@ -66,7 +66,7 @@ steps:
     command: .buildkite/release.sh
   - wait
   - label: ':docker: Release on Dockerhub'
-    command: bin/docker-php release
+    command: bin/php release
 EOF
 exit 0
 fi
@@ -75,5 +75,5 @@ fi
 cat <<EOF
 steps:
   - label: ':hammer: Run tests'
-    command: bin/docker-php tests --build
+    command: bin/php tests --build
 EOF

@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: ./versions/latest/Dockerfile
-#    image: bandsintown/docker-php
     container_name: php
     environment:
       - SERVICE_NAME=php-fpm

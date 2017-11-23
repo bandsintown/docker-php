@@ -1,4 +1,4 @@
-FROM bandsintown/docker-php:1.0.0
+FROM bandsintown/php:1.0.0
 
 ENV BATS_VERSION=0.4.0 DOCKERIZE_VERSION=v0.2.0
 
