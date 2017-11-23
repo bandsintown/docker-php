@@ -1,4 +1,4 @@
-FROM bandsintown/alpine:latest as builder
+FROM bandsintown/alpine:3.6 as builder
 
 FROM php:5.6.32-fpm-alpine
 

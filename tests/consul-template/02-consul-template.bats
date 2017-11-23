@@ -5,7 +5,7 @@ load helpers
 consul_service="consul"
 address="$(dig +short ${consul_service})"
 port="8500"
-service="php-fpm"
+service="php"
 
 @test "Check the global configuration is registered" {
 

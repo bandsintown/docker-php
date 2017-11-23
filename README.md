@@ -6,11 +6,10 @@
 [![Docker layers](https://images.microbadger.com/badges/image/bandsintown/docker-php.svg)](http://microbadger.com/images/bandsintown/docker-php)
 
 
-# PHP-FPM
+# PHP
 Docker image for php-fpm with Consul
 
-## php-fpm:alpine
-This image is based on the  [Bandsintown Alpine Linux image](https://github.com/bandsintown/docker-alpine) and the [PHP alpine](https://hub.docker.com/_/php/). Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general.
+This image is based on the [Bandsintown Alpine Linux image](https://github.com/bandsintown/docker-alpine) and the [PHP-FPM alpine](https://hub.docker.com/_/php/). Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general.
 
 This variant is highly recommended when final image size being as small as possible is desired. The main caveat to note is that it does use musl libc instead of glibc and friends, so certain software might run into issues depending on the depth of their libc requirements. However, most software doesn't have an issue with this, so this variant is usually a very safe choice. See this Hacker News comment thread for more discussion of the issues that might arise and some pro/con comparisons of using Alpine-based images.
 
@@ -27,7 +26,7 @@ This image allows to define the `php.ini` and `php-fpm.conf` files as a Consul k
 
 ## Configuration through Consul
 
-To manage the php configuration through Consul you have to create a Consul key at `service/php-fpm/php.ini` or/and `service/php-fpm/php-fpm.conf` to register the configurations.
+To manage the php configuration through Consul you have to create a Consul key at `service/php/php.ini` or/and `service/php/php-fpm.conf` to register the configurations.
 
 The default files are used in case the consul keys are not defined.
 
