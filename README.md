@@ -1,4 +1,4 @@
-[![dockeri.co](http://dockeri.co/image/bandsintown/docker-php)](https://hub.docker.com/r/bandsintown/docker-php/)
+[![dockeri.co](http://dockeri.co/image/bandsintown/php)](https://hub.docker.com/r/bandsintown/php/)
 
 [![Build status](https://badge.buildkite.com/aa01d972592c1c0ca35be92671f04142dd8a7294b0f7f78ad3.svg)](https://buildkite.com/bandsintown/docker-php)
 [![GitHub issues](https://img.shields.io/github/issues/bandsintown/docker-php.svg "GitHub issues")](https://github.com/bandsintown/docker-php)
@@ -7,6 +7,7 @@
 
 
 # PHP
+
 Docker image for php-fpm with Consul
 
 This image is based on the [Bandsintown Alpine Linux image](https://github.com/bandsintown/docker-alpine) and the [PHP-FPM alpine](https://hub.docker.com/_/php/). Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general.
