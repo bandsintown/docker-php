@@ -1,0 +1,3 @@
+{{ $service_name := or (env "SERVICE_NAME") "php" }}
+{{ $default_conf := file "/etc/php-config/php-fpm-default.conf" }}
+{{ keyOrDefault (printf "service/%s/php-fpm.conf" $service_name) $default_conf }}
