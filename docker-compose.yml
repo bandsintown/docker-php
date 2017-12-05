@@ -12,7 +12,7 @@ services:
     ports:
       - 9000:9000
 
- # Consul
+# Consul
   consul:
     image: consul:0.7.5
     command: "agent -dev -client 0.0.0.0 -ui"
@@ -24,7 +24,7 @@ services:
       - CONSUL_BIND_INTERFACE=eth0
       - SERVICE_IGNORE=true
 
-  # Registrator
+# Registrator
   registrator:
     image: nhuray/registrator:v7
     command: "-internal consul://consul:8500"
