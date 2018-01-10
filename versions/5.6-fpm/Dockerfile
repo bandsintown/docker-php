@@ -18,13 +18,15 @@ RUN apk update && apk upgrade \
       libltdl \
       libmcrypt-dev \
       libpng-dev \
-      curl wget bash tree jq bind-tools su-exec \
+      curl wget bash tree jq bind-tools su-exec build-base gcc autoconf \
       libmemcached-libs zlib \
     && set -xe \
     && apk add --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --virtual .memcached-deps $MEMCACHED_DEPS \
     && pecl install memcached-2.2.0 \
     && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/20_memcached.ini \
+    && pecl install memcache \
+    && echo "extension=memcache.so" > /usr/local/etc/php/conf.d/21_memcache.ini \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
