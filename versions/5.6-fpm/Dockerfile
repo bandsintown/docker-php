@@ -46,7 +46,8 @@ RUN mkdir /var/composer \
 COPY rootfs /
 
 RUN echo $TZ > /etc/timezone \
-    && touch /usr/local/var/run/php-fpm.pid
+    && touch /usr/local/var/run/php-fpm.pid \
+    && echo -ne "- with $(php -v | head -n 1)\n" >> /root/.built
 
 EXPOSE 9000
 
