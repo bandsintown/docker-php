@@ -9,6 +9,7 @@ COPY --from=builder /usr/local/bin/consul-template /usr/local/bin/consul-templat
 COPY --from=builder /usr/sbin/go-dnsmasq /usr/sbin/go-dnsmasq
 COPY --from=builder /etc/cont-init.d /etc/cont-init.d
 COPY --from=builder /etc/services.d /etc/services.d
+COPY --from=builder /root /root
 
 RUN apk update && apk upgrade \
     && apk add --update \
