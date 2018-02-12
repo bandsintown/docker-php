@@ -24,6 +24,9 @@ In particular we want to be able to php.ini and php-fpm.conf files.
 
 This image allows to define the `php.ini` and `php-fpm.conf` files as a Consul keys.
 
+We also installed in the image some useful tool / extensions: 
+  - [Memcached extension](http://php.net/manual/en/book.memcached.php)
+  - [Composer](https://getcomposer.org/) 
 
 ## Configuration through Consul
 
