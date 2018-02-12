@@ -2,7 +2,7 @@ FROM bandsintown/alpine:3.6 as builder
 
 FROM php:5.6.32-fpm-alpine
 
-ENV S6_OVERLAY_VERSION=1.19.1.1 GODNSMASQ_VERSION=1.0.7 CONSUL_TEMPLATE_VERSION=0.19.4 CONSUL_VERSION=0.8.4 MEMCACHED_DEPS="zlib-dev libmemcached-dev cyrus-sasl-dev" TZ="America/New_York"
+ENV S6_LOGGING=1 S6_OVERLAY_VERSION=1.19.1.1 GODNSMASQ_VERSION=1.0.7 CONSUL_TEMPLATE_VERSION=0.19.4 CONSUL_VERSION=0.8.4 MEMCACHED_DEPS="zlib-dev libmemcached-dev cyrus-sasl-dev" TZ="America/New_York"
 
 COPY --from=builder /usr/local/bin/consul /usr/local/bin/consul
 COPY --from=builder /usr/local/bin/consul-template /usr/local/bin/consul-template
@@ -53,7 +53,9 @@ RUN echo $TZ > /etc/timezone \
 
 EXPOSE 9000
 
-ENV S6_LOGGING=1
+# Workaround https://bugs.php.net/bug.php?id=71880
+ENV LOG_STREAM="/tmp/stdout"
+RUN mkfifo $LOG_STREAM && chmod 777 $LOG_STREAM
 
 ENTRYPOINT ["/init"]
-CMD ["php-fpm", "--pid", "/usr/local/var/run/php-fpm.pid"]
+CMD ["/bin/sh", "-c", "php-fpm --pid /usr/local/var/run/php-fpm.pid | tail -f $LOG_STREAM"]
