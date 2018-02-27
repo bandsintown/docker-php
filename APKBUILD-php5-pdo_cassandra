@@ -1,0 +1,57 @@
+# Maintainer: Sébastien RAULT <sebastien@kveer.fr>
+pkgname=php5-pdo_cassandra
+pkgver=0.6.0
+pkgrel=0
+pkgdesc="A totally obsolete, but the only one PDO Cassandra driver for cassandra protocol 2.0 only"
+url="https://github.com/Orange-OpenSource/YACassandraPDO"
+arch="all"
+license="GPLv2+"
+depends="php5 php5-pdo boost"
+depends_dev=""
+makedepends="$depends_dev boost-dev"
+install=""
+subpackages=""
+source="$pkgname-$pkgver.tar.gz::https://github.com/Orange-OpenSource/YACassandraPDO/archive/0.6.0.tar.gz"
+disturl="dev.alpinelinux.org:/archive/$pkgname/"
+giturl=https://github.com/Orange-OpenSource/YACassandraPDO.git
+options="!check !fhs"
+
+_builddir="$srcdir"/YACassandraPDO-$pkgver
+snapshot() {
+	local _format="tar.gz"
+	mkdir -p "$srcdir" && cd "$srcdir"
+	# clone git repo and archive
+	local _tag=$pkgver
+	msg "Creating git snapshot: $pkgname-$pkgver"
+	git clone --branch $_tag --depth=1 \
+		--base $giturl ${pkgname}.git || return 1
+	git --git-dir ${pkgname}.git archive \
+		--format=$_format \
+		-o $pkgname-$pkgver.$_format \
+		--prefix=$pkgname-$pkgver/ $_tag \
+		|| return 1
+	# upload to defined distfiles url
+	scp $pkgname-$pkgver.$_format $disturl || return 1
+}
+
+build() {
+	cd "$_builddir"
+	phpize || return 1
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		|| return 1
+	sed -ie 's!^\(prefix = \).*!\1/usr!g' Makefile || return 1
+	find . -type f -name "*.cpp" -exec sed -i -e 's/[^:]\(apache::thrift::\)/::\1/g' \
+	{\} \; \
+		|| return 1
+	make || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make install INSTALL_ROOT="$pkgdir" || return 1
+	#mkdir -p "$pkgdir"/usr/include
+}
+sha512sums="05093288e5b35287f464033ddf1cdb2f7283d1c36b0e44407bebb21d57b7da46cc526e63ea6bf15a76c7179a8745f02c7c71ddc3da63faa0fbe965749c9de48f  php5-pdo_cassandra-0.6.0.tar.gz"
