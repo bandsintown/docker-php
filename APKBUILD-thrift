@@ -1,0 +1,77 @@
+# Maintainer: Sébastien RAULT <sebastien@kveer.fr>
+pkgname=thrift
+pkgver=0.10.0
+pkgrel=3
+pkgdesc="Apache Thrift compiler"
+url="https://git-wip-us.apache.org/repos/asf/thrift.git"
+arch="all"
+license="ASL 2.0"
+depends="boost glib gobject-introspection libevent openssl zlib"
+depends_dev="boost-dev gobject-introspection-dev libevent-dev openssl-dev zlib-dev"
+makedepends="$depends_dev glib-dev bison flex"
+install=""
+subpackages="$pkgname-dev $pkgname-libs"
+source="http://www-eu.apache.org/dist/thrift/0.10.0/thrift-0.10.0.tar.gz"
+disturl="dev.alpinelinux.org:/archive/$pkgname/"
+giturl=https://git-wip-us.apache.org/repos/asf/thrift.git
+options="!check !fhs"
+
+_builddir="$srcdir"/thrift-$pkgver
+snapshot() {
+	local _format="tar.gz"
+	mkdir -p "$srcdir" && cd "$srcdir"
+	# clone git repo and archive
+	local _tag=$pkgver
+	msg "Creating git snapshot: $pkgname-$pkgver"
+	git clone --branch $_tag --depth=1 \
+		--base $giturl ${pkgname}.git || return 1
+	git --git-dir ${pkgname}.git archive \
+		--format=$_format \
+		-o $pkgname-$pkgver.$_format \
+		--prefix=$pkgname-$pkgver/ $_tag \
+		|| return 1
+	# upload to defined distfiles url
+	scp $pkgname-$pkgver.$_format $disturl || return 1
+}
+
+build() {
+	cd "$_builddir/lib/php/src/ext/thrift_protocol"
+	phpize
+
+	cd "$_builddir"
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--without-pythonmake \
+		--enable-tutorial=no \
+		--with-boost \
+		--with-c_glib \
+		--with-cpp \
+		--with-libevent \
+		--with-zlib \
+		--with-php \
+		--with-php_extension \
+		--with-qt4=no \
+		--with-qt5=no \
+		--with-csharp=no \
+		--with-erlang=no \
+		--with-nodejs=no \
+		--with-lua=no \
+		--with-python=no \
+		--with-perl=no \
+		--with-dart=no \
+		--with-ruby=no \
+		--with-haskell=no \
+		--with-go=no \
+		--with-haxe=no \
+		--with-d=no \
+		|| return 1
+	make || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make install DESTDIR="$pkgdir" || return 1
+}
+sha512sums="3695cf0fb0e4080b02446ab694fb61476997d8b181942dd6fe1e3e7cf0dcf990b4184ea33f9d0bc290b96200f702cf1ac1579e36b6b5bfe9ba8914b2d2938ddc  thrift-0.10.0.tar.gz"
