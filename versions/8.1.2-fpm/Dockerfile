@@ -20,7 +20,6 @@ RUN apk update && apk upgrade \
       libpng-dev \
       curl wget bash tree jq bind-tools su-exec build-base gcc autoconf \
       libmemcached-libs zlib \
-      runc \
     && set -xe \
     && apk add --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --virtual .memcached-deps $MEMCACHED_DEPS \
