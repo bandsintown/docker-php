@@ -1,6 +1,6 @@
-FROM bandsintown/alpine:3.15.0 as builder
+FROM bandsintown/alpine:3.17.3 as builder
 
-FROM php:8.1.12-fpm-alpine
+FROM php:8.2.4-fpm-alpine
 
 ENV S6_LOGGING=1 S6_OVERLAY_VERSION=1.19.1.1 GODNSMASQ_VERSION=1.0.7 CONSUL_TEMPLATE_VERSION=0.19.4 CONSUL_VERSION=0.8.4 MEMCACHED_DEPS="zlib-dev libmemcached-dev cyrus-sasl-dev" TZ="America/New_York"
 

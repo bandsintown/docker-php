@@ -1,4 +1,4 @@
-FROM bandsintown/php:8.1.8-fpm
+FROM bandsintown/php:8.2.4-fpm
 
 ENV BATS_VERSION=0.4.0 DOCKERIZE_VERSION=v0.2.0
 
