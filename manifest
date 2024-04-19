@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# This file is not used. Added as a reference for the variables that need to be set.
+
+# A Docker image is a combination of REGISTRY/NAMESPACE/REPOSITORY[:TAG].
+# e.g. docker.io/bandsintown/alpine:3.19.1
+registry=dockerhub
+namespace=bandsintown
+repository=php
+
+# The base image our image is based on
+parent=php
+
+# Any variants of our image
+# Test images are considered a variant even if we won't publish them
+variants=(test)
+
+# Dependencies for our image
+s6_overlay_version="1.19.1.1"
+godnsmasq_version="1.0.7"
+consul_template_version="0.19.4"
+consul_version="0.7.5"
