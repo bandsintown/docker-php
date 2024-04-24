@@ -17,12 +17,12 @@ steps:
       - select: Tag this version as latest?
         key: version-is-latest
         required: true
-        default: no
+        default: "no"
         options:
-          - label: Yes
-            value: yes
-          - label: No
-            value: no
+          - label: "Yes"
+            value: "yes"
+          - label: "No"
+            value: "no"
 
   - wait
 
