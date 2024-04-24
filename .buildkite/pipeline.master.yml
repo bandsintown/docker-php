@@ -1,0 +1,76 @@
+env:
+  PIPELINE_NAME: docker-php
+
+steps:
+  - input: What version do you want to build and release?
+    fields:
+      - select: Release Version
+        key: selected-version
+        hint: "Only the 5 latest versions are shown"
+        required: true
+        options:
+          - label: v8.3.6-fpm
+            value: 8.3.6-fpm
+
+  - block: Tag version as latest?
+    fields:
+      - select: Tag this version as latest?
+        key: version-is-latest
+        required: true
+        default: no
+        options:
+          - label: Yes
+            value: yes
+          - label: No
+            value: no
+
+  - wait
+
+  - label: Trigger Build and Release pipeline
+    command: |
+      VERSION="$$(buildkite-agent meta-data get selected-version --default 'NA')"
+      VERSION_IS_LATEST="$$(buildkite-agent meta-data get version-is-latest --default 'NA')"
+
+      cat <<- YAML | buildkite-agent pipeline upload
+      steps:
+        - trigger: ${PIPELINE_NAME}
+          async: true
+          label: ":construction::building_construction: Trigger deploy for version $$VERSION"
+          build:
+            commit: "${BUILDKITE_COMMIT}"
+            branch: "${BUILDKITE_BRANCH}"
+            env:
+              VERSION: "$$VERSION"
+              VERSION_IS_LATEST: "$$VERSION_IS_LATEST"
+              DEPLOY_SERVICE: release
+      YAML
+
+  - block: ":github: Prepare Github Release"
+    prompt: Fill out the details for release
+    fields:
+      - text: Release name
+        key: release-name
+        required: true
+        hint: |
+          It's common practice to prefix your version names with the letter v.
+          Some good tag names might be v1.0 or v2.3.4.
+          If the tag isn't meant for production use, add a pre-release version
+          after the version name. Some good pre-release versions might be
+          v0.2-alpha or v5.9-beta.3.
+      - text: Describe this release
+        key: release-notes
+        required: false
+        hint: List of what's changed in this release
+      - select: Release type
+        key: release-type
+        default: draft
+        options:
+        - label: Draft
+          value: draft
+        - label: Pre-release
+          value: pre-release
+        - label: Release
+          value: release
+
+  - label: ":github: Create Github release"
+    command: .buildkite/release.sh
