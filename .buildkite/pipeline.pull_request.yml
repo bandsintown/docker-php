@@ -1,0 +1,41 @@
+env:
+  PIPELINE_NAME: docker-php
+
+steps:
+  - block: ":question::hammer: What version do you want to test?"
+    fields:
+      - select: Select a version to test
+        key: selected-version
+        required: true
+        options:
+          - label: v8.3.6-fpm
+            value: 8.3.6-fpm
+          - label: v8.2.4-fpm
+            value: 8.2.4-fpm
+
+  - label: ":hammer::docker: Running tests for the selected version"
+    command: |
+      VERSION="$$(buildkite-agent meta-data get selected-version --default 'NA')"
+
+      bin/php tests --version "$${VERSION}" --build
+
+
+  - block: ":question::hammer: Do you want to release this version?"
+
+  - label: Trigger Build and Release pipeline
+    command: |
+      VERSION="$$(buildkite-agent meta-data get selected-version --default 'NA')"
+
+      cat <<- YAML | buildkite-agent pipeline upload
+      steps:
+        - trigger: ${PIPELINE_NAME}
+          async: true
+          label: ":construction::building_construction: Trigger release for version $$VERSION"
+          build:
+            commit: "${BUILDKITE_COMMIT}"
+            branch: "${BUILDKITE_BRANCH}"
+            env:
+              VERSION: "$$VERSION"
+              VERSION_IS_LATEST: no
+              DEPLOY_SERVICE: release
+      YAML

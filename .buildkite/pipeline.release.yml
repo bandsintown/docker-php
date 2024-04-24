@@ -1,0 +1,21 @@
+env:
+  IMAGE: bandsintown/php
+
+steps:
+  - label: ":docker: Build and Push PHP v${VERSION}"
+    if: build.env("VERSION") != "NA"
+    plugins:
+      - docker-compose#v5.2.0:
+          build: php
+          push:
+            - php:${IMAGE}:${VERSION}-${BUILDKITE_COMMIT:0:7}
+
+  - wait
+
+  - label: ":docker: Tag as latest and Push PHP v${VERSION}"
+    if: build.env("VERSION_IS_LATEST") == "yes"
+    plugins:
+      - docker-compose#v5.2.0:
+          push:
+            - php:${IMAGE}:${VERSION}
+            - php:${IMAGE}:latest

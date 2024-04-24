@@ -1,0 +1,30 @@
+steps:
+  # Upload pipeline for branch `master`.
+  # Conditions:
+  #   Build created from branch `master`
+  #   Not "triggered" by other builds.
+  - command: "buildkite-agent pipeline upload .buildkite/pipeline.master.yml"
+    label: ":pipeline: Master pipeline"
+    if: |
+      build.branch == "master" &&
+      build.source != "trigger_job"
+
+  # Upload pipeline for Pull Requests.
+  # Conditions:
+  #   Not created from the `master` branch.
+  #   Not "triggered" by other builds.
+  - command: "buildkite-agent pipeline upload .buildkite/pipeline.pull_request.yml"
+    label: ":pipeline: Pull Request pipeline"
+    if: |
+      build.branch != "master" &&
+      build.source != "trigger_job"
+
+  # Upload pipeline specified by $DEPLOY_SERVICE.
+  # Conditions:
+  #   Build triggered by other builds.
+  #   $DEPLOY_SERVICE is specified.
+  - command: "buildkite-agent pipeline upload .buildkite/pipeline.${DEPLOY_SERVICE}.yml"
+    label: ":pipeline: Triggered pipeline for ${DEPLOY_SERVICE}"
+    if: |
+      build.source == "trigger_job" &&
+      build.env("DEPLOY_SERVICE") != "NA"

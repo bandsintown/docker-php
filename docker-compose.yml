@@ -1,16 +1,38 @@
-version: "2"
-
 services:
   php:
+    image: bandsintown/php:${VERSION}
     build:
       context: .
-      dockerfile: ./versions/latest/Dockerfile
-    container_name: php
+      dockerfile: ./versions/${VERSION}/Dockerfile
+
+  php-test:
+    image: bandsintown/php:${VERSION}-test
+    build:
+      context: .
+      dockerfile: ./versions/${VERSION}/test/Dockerfile
     environment:
       - SERVICE_NAME=php-fpm
       - CONSUL_HTTP_ADDR=consul:8500
     ports:
       - 9000:9000
+
+  # Test image (packages, services, scripts)
+  test-image:
+    image: bandsintown/php:${VERSION}-test
+    command: bats /tests/image
+    environment:
+      - VERSION=${VERSION}
+
+  # Tests for consul template
+  test-consul-template:
+    image: bandsintown/php:${VERSION}-test
+    command: dockerize -wait http://consul:8500 -timeout 10s bats /tests/consul-template
+    depends_on:
+      - consul
+    environment:
+      - DISABLE_CONSUL_TEMPLATE=true
+      - CONSUL_HTTP_ADDR=consul:8500
+      - VERSION=${VERSION}
 
 # Consul
   consul:
