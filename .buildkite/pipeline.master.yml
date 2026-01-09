@@ -9,6 +9,8 @@ steps:
         hint: "Only the 5 latest versions are shown"
         required: true
         options:
+          - label: v8.4.16-fpm
+            value: 8.4.16-fpm
           - label: v8.3.6-fpm
             value: 8.3.6-fpm
 
