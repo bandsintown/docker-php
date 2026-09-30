@@ -1,4 +1,4 @@
-FROM bandsintown/alpine:3.23.5 as builder
+FROM bandsintown/alpine:3.24.0 as builder
 
 FROM surnet/alpine-wkhtmltopdf:3.19.0-0.12.6-full as wkhtmltopdf
 
