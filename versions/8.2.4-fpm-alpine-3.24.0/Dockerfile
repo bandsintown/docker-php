@@ -1,8 +1,6 @@
-FROM bandsintown/alpine:3.23.5 as builder
+FROM bandsintown/alpine:3.24.0 as builder
 
-FROM surnet/alpine-wkhtmltopdf:3.19.0-0.12.6-full as wkhtmltopdf
-
-FROM php:8.4.16-fpm-alpine
+FROM php:8.2.4-fpm-alpine
 
 ENV S6_LOGGING=1 S6_OVERLAY_VERSION=1.19.1.1 GODNSMASQ_VERSION=1.0.7 CONSUL_TEMPLATE_VERSION=0.19.4 CONSUL_VERSION=0.8.4 MEMCACHED_DEPS="zlib-dev libmemcached-dev cyrus-sasl-dev" TZ="America/New_York"
 
@@ -25,9 +23,9 @@ RUN apk update && apk upgrade \
     && set -xe \
     && apk add --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --virtual .memcached-deps $MEMCACHED_DEPS \
-    && pecl install memcached-3.3.0 \
+    && pecl install memcached-3.1.4 \
     && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/20_memcached.ini \
-    && pecl install memcache-8.2 \
+    && pecl install memcache \
     && echo "extension=memcache.so" > /usr/local/etc/php/conf.d/21_memcache.ini \
     && docker-php-ext-install mysqli \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -41,8 +39,8 @@ RUN curl -Ls https://github.com/just-containers/s6-overlay/releases/download/v${
 RUN mkdir /var/composer && \
     cd /var/composer && \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    php composer-setup.php --version=2.9.3 --install-dir=/usr/bin --filename=composer && \
+    php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
     php -r "unlink('composer-setup.php');"
 
 COPY rootfs /
