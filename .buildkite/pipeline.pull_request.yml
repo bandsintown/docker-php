@@ -10,16 +10,10 @@ steps:
         options:
           - label: v8.4.16-fpm
             value: 8.4.16-fpm
-          - label: v8.4.16-fpm-alpine-3.24.0
-            value: 8.4.16-fpm-alpine-3.24.0
           - label: v8.3.6-fpm
             value: 8.3.6-fpm
-          - label: v8.3.6-fpm-alpine-3.24.0
-            value: 8.3.6-fpm-alpine-3.24.0
           - label: v8.2.4-fpm
             value: 8.2.4-fpm
-          - label: v8.2.4-fpm-alpine-3.24.0
-            value: 8.2.4-fpm-alpine-3.24.0
 
   - label: ":hammer::docker: Running tests for the selected version"
     command: |
