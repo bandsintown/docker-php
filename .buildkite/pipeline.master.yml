@@ -9,6 +9,10 @@ steps:
         hint: "Only the 5 latest versions are shown"
         required: true
         options:
+          - label: v8.5.9-fpm
+            value: 8.5.9-fpm
+          - label: v8.5.9-fpm-alpine-3.24.0
+            value: 8.5.9-fpm-alpine-3.24.0
           - label: v8.4.16-fpm
             value: 8.4.16-fpm
           - label: v8.4.16-fpm-alpine-3.24.0
