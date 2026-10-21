@@ -25,9 +25,9 @@ RUN apk update && apk upgrade \
     && set -xe \
     && apk add --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --virtual .memcached-deps $MEMCACHED_DEPS \
-    && pecl install memcached-3.3.0 \
+    && ( retries=5; until pecl install memcached-3.3.0; do retries=$((retries-1)); [ $retries -le 0 ] && exit 1; echo "Retrying pecl install memcached..."; sleep 5; done ) \
     && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/20_memcached.ini \
-    && pecl install memcache-8.2 \
+    && ( retries=5; until pecl install memcache-8.2; do retries=$((retries-1)); [ $retries -le 0 ] && exit 1; echo "Retrying pecl install memcache..."; sleep 5; done ) \
     && echo "extension=memcache.so" > /usr/local/etc/php/conf.d/21_memcache.ini \
     && docker-php-ext-install mysqli \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
