@@ -8,6 +8,10 @@ steps:
         key: selected-version
         required: true
         options:
+          - label: v8.5.13-fpm
+            value: 8.5.13-fpm
+          - label: v8.5.13-fpm-alpine-3.24.0
+            value: 8.5.13-fpm-alpine-3.24.0
           - label: v8.5.12-fpm
             value: 8.5.12-fpm
           - label: v8.5.12-fpm-alpine-3.24.0
